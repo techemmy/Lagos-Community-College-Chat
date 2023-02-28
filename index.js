@@ -24,9 +24,11 @@ io.on("connection", (socket) => {
 
     socket.once("disconnect", () => {
       const disconnectedUserIndex = onlineUsers.indexOf(username);
-      console.log(`${username} disconnected!`);
       if (disconnectedUserIndex >= 0) {
+        console.log(`${username} disconnected!`);
         onlineUsers.splice(disconnectedUserIndex, 1);
+
+        socket.emit("notify user disconnected", username);
       }
     });
   });

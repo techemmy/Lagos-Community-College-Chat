@@ -1,24 +1,24 @@
-let socket = io();
+import { username, emitMessage, emitUserConnected, emitUserDisconnected } from './main.js';
+const messagesContainer = document.getElementById("messages");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const statusBar = document.getElementById("status-bar");
 
-let messagesContainer = document.getElementById("messages");
-let form = document.getElementById("form");
-let input = document.getElementById("input");
-let statusBar = document.getElementById("status-bar");
-
-let username = localStorage.getItem("username");
-while (!username || username.trim() === "") {
-  username = prompt("Enter your username");
-  localStorage.setItem("username", username);
-}
+const socket = io({ autoConnect: true });
 
 socket.on("connect", () => {
   emitUserConnected(username, messagesContainer);
-  window.scrollTo(0, document.body.scrollHeight);
   socket.emit("user connected", username);
 });
 
 socket.on("notify user connected", (username) => {
+  window.scrollTo(0, document.body.scrollHeight);
   emitUserConnected(username, messagesContainer);
+});
+
+socket.on("notify user disconnected", (username) => {
+  window.scrollTo(0, document.body.scrollHeight);
+  emitUserDisconnected(username, messagesContainer);
 });
 
 form.addEventListener("submit", (e) => {
@@ -58,14 +58,5 @@ socket.on("update online users", (onlineUsers) => {
     }
 });
 
-const emitMessage = (data, messages) => {
-  const item = document.createElement("li");
-  item.innerHTML = `<b>${data.user}</b>: ${data.message}`;
-  messages.appendChild(item);
-};
 
-const emitUserConnected = (userName, messages) => {
-  const item = document.createElement("li");
-  item.innerHTML = `<i>${userName} just connected</i>`;
-  messages.appendChild(item);
-};
+export { socket };
