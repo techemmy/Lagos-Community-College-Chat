@@ -3,6 +3,7 @@ import {
   emitMessage,
   emitUserConnected,
   emitUserDisconnected,
+  sortUsersByCurrentUser
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -30,7 +31,6 @@ socket.on("notify user disconnected", (user) => {
 //   users.forEach((user) => {
 //     user.self = user.userID === socket.id;
 //   });
-//   console.log(users);
 //   // put the current user first, and then sort by username
 //   this.users = users.sort((a, b) => {
 //     if (a.self) return -1;
@@ -70,6 +70,7 @@ socket.on("user typing", (userTyping) => {
 });
 
 socket.on("update online users", (onlineUsers) => {
+  onlineUsers = sortUsersByCurrentUser(onlineUsers, socket.id)
   const statusBarText = statusBar.innerText;
   if (statusBarText === "" || statusBarText.startsWith("Online")) {
     const usersName = onlineUsers.map((userObj) => {

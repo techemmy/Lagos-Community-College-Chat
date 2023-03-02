@@ -28,6 +28,7 @@ io.on("connection", (socket) => {
     const userExists = onlineUsers.find(user => {
       return user.userID === id || user.username === socket.username;
     })
+
     if (!userExists) {
       onlineUsers.push({
         userID: id,
@@ -35,7 +36,6 @@ io.on("connection", (socket) => {
       });
     }
   }
-  // socket.emit("users", onlineUsers);
 
   socket.on("user connected", () => {
     socket.broadcast.emit("notify user connected", {

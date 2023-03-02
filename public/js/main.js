@@ -15,6 +15,19 @@ while (!username || username.trim() === "") {
 socket.auth = { username };
 socket.connect();
 
+const sortUsersByCurrentUser = (users, userID) => {
+  users.forEach((user) => {
+    user.self = user.userID === userID;
+  });
+
+  return users.sort((a, b) => {
+    if (a.self) return -1;
+    if (b.self) return 1;
+    if (a.username < b.username) return -1;
+    return a.username > b.username ? 1 : 0;
+  });
+}
+
 const emitMessage = (data, messages) => {
   const item = document.createElement("li");
   item.innerHTML = `<b>${data.user}</b>: ${data.message}`;
@@ -52,11 +65,11 @@ addPrivateUserBtn.addEventListener("click", async () => {
   userNameInput.value = "";
 });
 
-function addNotification(notificationContainer, message) {
+const addNotification = (notificationContainer, message) => {
   const feedbackMessage = document.createElement("p");
   feedbackMessage.innerHTML = message;
   notificationContainer.appendChild(feedbackMessage);
   setTimeout(() => (feedbackMessage.innerHTML = ""), 3000);
 }
 
-export { username, emitMessage, emitUserConnected, emitUserDisconnected };
+export { username, emitMessage, emitUserConnected, emitUserDisconnected, sortUsersByCurrentUser };
