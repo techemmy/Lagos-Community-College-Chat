@@ -70,10 +70,10 @@ io.on("connection", (socket) => {
   }, 1000);
 
   socket.on("confirm user", (username) => {
-    const userExists = onlineUsers.findIndex((user) => {
+    const user = onlineUsers.find((user) => {
       return user.username === username;
     });
-    socket.emit("user confirmed", userExists);
+    socket.emit("user confirmed", user);
   });
 });
 
