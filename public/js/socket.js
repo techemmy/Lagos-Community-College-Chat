@@ -27,18 +27,6 @@ socket.on("notify user disconnected", (user) => {
   window.scrollTo(0, document.body.scrollHeight);
 });
 
-// socket.on("users", function (users) {
-//   users.forEach((user) => {
-//     user.self = user.userID === socket.id;
-//   });
-//   // put the current user first, and then sort by username
-//   this.users = users.sort((a, b) => {
-//     if (a.self) return -1;
-//     if (b.self) return 1;
-//     if (a.username < b.username) return -1;
-//     return a.username > b.username ? 1 : 0;
-//   });
-// });
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
