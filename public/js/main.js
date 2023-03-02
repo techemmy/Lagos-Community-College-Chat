@@ -2,10 +2,11 @@ import { socket, checkIfUserExists } from "./socket.js";
 
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
-const modalLabelContainer = document.querySelector(
+const modalPopup = document.querySelector(
   "#addPrivateUserModal .modal-body "
 );
 const userNameInput = document.getElementById("privateUserNameInput");
+// const privateMessages = document.getElementById()
 
 while (!username || username.trim() === "") {
   username = prompt("Enter your username");
@@ -49,24 +50,39 @@ const emitUserDisconnected = (user, messages) => {
 };
 
 addPrivateUserBtn.addEventListener("click", async () => {
-  const user = userNameInput.value.trim();
+  const username = userNameInput.value.trim();
 
   try {
-    if (user && (await checkIfUserExists(socket, user))) {
+    if (username && (await checkIfUserExists(socket, username))) {
       addNotification(
-        modalLabelContainer,
-        `<i>${user} confirmed. Adding up...</i>`
+        modalPopup,
+        `<i>${username} confirmed. Adding up...</i>`
       );
+      addUserToPrivateMessage(username, privateMessages);
     }
   } catch (error) {
     if (error.message) {
-      addNotification(modalLabelContainer, `${error.message}`);
+      addNotification(modalPopup, `${error.message}`);
     } else {
-      addNotification(modalLabelContainer, "<i>Unable to add user</i>");
+      addNotification(modalPopup, "<i>Unable to add user</i>");
     }
   }
   userNameInput.value = "";
 });
+
+const addUserToPrivateMessage = (user, privateMessages) => {
+  const clickableUser = document.createElement('a');
+  clickableUser.className = "private-message";
+  const greenDot = document.createElement("span");
+  greenDot.className = "fa fa-circle mr-3";
+  const username = document.createElement("b");
+  username.innerText = user;
+
+  clickableUser.append(greenDot);
+  clickableUser.append(username);
+
+  privateMessages.appendChild(clickableUser);
+}
 
 const addNotification = (notificationContainer, message) => {
   const feedbackMessage = document.createElement("p");

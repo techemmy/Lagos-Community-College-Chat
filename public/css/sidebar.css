@@ -28,7 +28,8 @@
   #sidebar ul.components {
     padding: 0; }
   #sidebar ul li {
-    font-size: 16px; }
+    font-size: 16px;
+    cursor: pointer }
     #sidebar ul li > ul {
       margin-left: 10px; }
       #sidebar ul li > ul li {
@@ -106,3 +107,11 @@ a[data-toggle="collapse"] {
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s; }
+
+  .private-message span {
+    color: rgb(0, 255, 21);
+}
+
+.private-message b {
+    margin-left: .3rem;
+}
