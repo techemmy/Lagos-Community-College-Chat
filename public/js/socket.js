@@ -74,9 +74,9 @@ function checkIfUserExists(socket, username) {
     }
 
     socket.emit("confirm user", username);
-    socket.on("user confirmed", (userExists) => {
-      if (userExists >= 0) {
-        resolve(true);
+    socket.on("user confirmed", (user) => {
+      if (user) {
+        resolve(user);
       } else {
         reject(Error("User not found"));
       }
@@ -85,4 +85,8 @@ function checkIfUserExists(socket, username) {
   });
 }
 
-export { socket, checkIfUserExists };
+function addPrivateMessages(currentUser, otherUser, privateMessages) {
+  console.log(currentUser, otherUser, privateMessages)
+}
+
+export { socket, checkIfUserExists, addPrivateMessages };
