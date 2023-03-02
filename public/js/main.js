@@ -1,4 +1,4 @@
-import { socket, checkIfUserExists } from "./socket.js";
+import { socket, checkIfUserExists, addPrivateMessages } from "./socket.js";
 
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
@@ -51,14 +51,23 @@ const emitUserDisconnected = (user, messages) => {
 
 addPrivateUserBtn.addEventListener("click", async () => {
   const username = userNameInput.value.trim();
+  if (!username) {
+    addNotification(
+      modalPopup,
+      "<i>Invalid username</i>"
+    );
+    userNameInput.value = "";
+    return
+  }
 
   try {
-    if (username && (await checkIfUserExists(socket, username))) {
+    const user = await checkIfUserExists(socket, username);
+    if (user) {
       addNotification(
         modalPopup,
         `<i>${username} confirmed. Adding up...</i>`
       );
-      addUserToPrivateMessage(username, privateMessages);
+      addPrivateMessages(user, socket.auth.username, privateMessages);
     }
   } catch (error) {
     if (error.message) {
