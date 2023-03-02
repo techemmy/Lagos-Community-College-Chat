@@ -4,6 +4,7 @@ import {
   emitUserConnected,
   emitUserDisconnected,
   sortUsersByCurrentUser,
+  addUserToPrivateMessageUI
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -67,6 +68,11 @@ socket.on("update online users", (onlineUsers) => {
   }
 });
 
+socket.on("add user", from => {
+  console.log("entered", from);
+  addUserToPrivateMessageUI(from);
+})
+
 function checkIfUserExists(socket, username) {
   return new Promise((resolve, reject) => {
     if (username === socket.auth.username) {
@@ -85,8 +91,9 @@ function checkIfUserExists(socket, username) {
   });
 }
 
-function addPrivateMessages(currentUser, otherUser, privateMessages) {
-  console.log(currentUser, otherUser, privateMessages)
+function addPrivateMessages(otherUser) {
+  addUserToPrivateMessageUI(otherUser.username);
+  socket.emit("add user", {from: socket.auth.username, to: otherUser});
 }
 
 export { socket, checkIfUserExists, addPrivateMessages };

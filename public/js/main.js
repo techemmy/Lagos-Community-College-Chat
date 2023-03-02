@@ -3,10 +3,9 @@ import { socket, checkIfUserExists, addPrivateMessages } from "./socket.js";
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
 const modalPopup = document.querySelector(
-  "#addPrivateUserModal .modal-body "
+  "#addPrivateUserModal .modal-body"
 );
 const userNameInput = document.getElementById("privateUserNameInput");
-// const privateMessages = document.getElementById()
 
 while (!username || username.trim() === "") {
   username = prompt("Enter your username");
@@ -67,7 +66,7 @@ addPrivateUserBtn.addEventListener("click", async () => {
         modalPopup,
         `<i>${username} confirmed. Adding up...</i>`
       );
-      addPrivateMessages(socket.auth.username, user, privateMessages);
+      addPrivateMessages(user);
     }
   } catch (error) {
     if (error.message) {
@@ -79,7 +78,9 @@ addPrivateUserBtn.addEventListener("click", async () => {
   userNameInput.value = "";
 });
 
-const addUserToPrivateMessageUI = (user, privateMessages) => {
+const addUserToPrivateMessageUI = (user) => {
+  const privateMessages = document.getElementById("privateMessages")
+
   const clickableUser = document.createElement('a');
   clickableUser.className = "private-message";
   const greenDot = document.createElement("span");

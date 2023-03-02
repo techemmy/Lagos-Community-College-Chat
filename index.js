@@ -75,6 +75,10 @@ io.on("connection", (socket) => {
     });
     socket.emit("user confirmed", user);
   });
+
+  socket.on("add user", ({from, to}) => {
+    socket.to(to.userID).emit("add user", from);
+  })
 });
 
 app.use((err, req, res, next) => {
