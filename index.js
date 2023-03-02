@@ -25,9 +25,9 @@ const onlineUsers = [];
 
 io.on("connection", (socket) => {
   for (let [id, socket] of io.of("/").sockets) {
-    const userExists = onlineUsers.find(user => {
+    const userExists = onlineUsers.find((user) => {
       return user.userID === id || user.username === socket.username;
-    })
+    });
 
     if (!userExists) {
       onlineUsers.push({
@@ -69,22 +69,21 @@ io.on("connection", (socket) => {
     socket.volatile.emit("update online users", onlineUsers);
   }, 1000);
 
-  socket.on("confirm user", username => {
-    const userExists = onlineUsers.findIndex(user => {
+  socket.on("confirm user", (username) => {
+    const userExists = onlineUsers.findIndex((user) => {
       return user.username === username;
-    })
+    });
     socket.emit("user confirmed", userExists);
-  })
-
+  });
 });
 
 app.use((err, req, res, next) => {
-  console.error("AN ERROR OCCURED...")
+  console.error("AN ERROR OCCURED...");
   console.error(err.message);
-})
+});
 
 server.listen(3000, () => {
   console.log(`Listening at *:3000`);
 });
 
- module.exports = { onlineUsers }
+module.exports = { onlineUsers };

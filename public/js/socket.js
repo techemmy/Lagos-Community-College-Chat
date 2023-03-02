@@ -3,7 +3,7 @@ import {
   emitMessage,
   emitUserConnected,
   emitUserDisconnected,
-  sortUsersByCurrentUser
+  sortUsersByCurrentUser,
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -26,7 +26,6 @@ socket.on("notify user disconnected", (user) => {
   emitUserDisconnected(user, messagesContainer);
   window.scrollTo(0, document.body.scrollHeight);
 });
-
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -58,7 +57,7 @@ socket.on("user typing", (userTyping) => {
 });
 
 socket.on("update online users", (onlineUsers) => {
-  onlineUsers = sortUsersByCurrentUser(onlineUsers, socket.id)
+  onlineUsers = sortUsersByCurrentUser(onlineUsers, socket.id);
   const statusBarText = statusBar.innerText;
   if (statusBarText === "" || statusBarText.startsWith("Online")) {
     const usersName = onlineUsers.map((userObj) => {

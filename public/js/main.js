@@ -26,7 +26,7 @@ const sortUsersByCurrentUser = (users, userID) => {
     if (a.username < b.username) return -1;
     return a.username > b.username ? 1 : 0;
   });
-}
+};
 
 const emitMessage = (data, messages) => {
   const item = document.createElement("li");
@@ -36,14 +36,14 @@ const emitMessage = (data, messages) => {
 
 const emitUserConnected = (user, messages) => {
   const item = document.createElement("li");
-  const userName = user.username? user.username:user;
+  const userName = user.username ? user.username : user;
   item.innerHTML = `<i>${userName} just connected!</i>`;
   messages.appendChild(item);
 };
 
 const emitUserDisconnected = (user, messages) => {
   const item = document.createElement("li");
-  const userName = user.username? user.username:user;
+  const userName = user.username ? user.username : user;
   item.innerHTML = `<i>${userName} just disconnected!</i>`;
   messages.appendChild(item);
 };
@@ -52,8 +52,11 @@ addPrivateUserBtn.addEventListener("click", async () => {
   const user = userNameInput.value.trim();
 
   try {
-    if (user && await checkIfUserExists(socket, user)) {
-      addNotification(modalLabelContainer, `<i>${user} confirmed. Adding up...</i>`);
+    if (user && (await checkIfUserExists(socket, user))) {
+      addNotification(
+        modalLabelContainer,
+        `<i>${user} confirmed. Adding up...</i>`
+      );
     }
   } catch (error) {
     if (error.message) {
@@ -70,6 +73,12 @@ const addNotification = (notificationContainer, message) => {
   feedbackMessage.innerHTML = message;
   notificationContainer.appendChild(feedbackMessage);
   setTimeout(() => (feedbackMessage.innerHTML = ""), 3000);
-}
+};
 
-export { username, emitMessage, emitUserConnected, emitUserDisconnected, sortUsersByCurrentUser };
+export {
+  username,
+  emitMessage,
+  emitUserConnected,
+  emitUserDisconnected,
+  sortUsersByCurrentUser,
+};
