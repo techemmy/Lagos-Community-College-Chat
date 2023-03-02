@@ -12,25 +12,46 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-let onlineUsers = [];
+io.use((socket, next) => {
+  const username = socket.handshake.auth.username;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  socket.username = username;
+  next();
+});
+
+const onlineUsers = [];
 
 io.on("connection", (socket) => {
-  console.log("user connected");
+  for (let [id, socket] of io.of("/").sockets) {
+    const userExists = onlineUsers.find(user => {
+      return user.userID === id || user.username === socket.username;
+    })
+    if (!userExists) {
+      onlineUsers.push({
+        userID: id,
+        username: socket.username,
+      });
+    }
+  }
+  // socket.emit("users", onlineUsers);
 
-  socket.on("user connected", (username) => {
-    onlineUsers.push(username);
-    socket.broadcast.emit("notify user connected", username);
-    io.emit("update online users", onlineUsers);
-
-    socket.once("disconnect", () => {
-      const disconnectedUserIndex = onlineUsers.indexOf(username);
-      if (disconnectedUserIndex >= 0) {
-        console.log(`${username} disconnected!`);
-        onlineUsers.splice(disconnectedUserIndex, 1);
-
-        socket.emit("notify user disconnected", username);
-      }
+  socket.on("user connected", () => {
+    socket.broadcast.emit("notify user connected", {
+      userID: socket.id,
+      username: socket.username,
     });
+  });
+
+  socket.once("disconnect", () => {
+    const disconnectedUserIndex = onlineUsers.findIndex((user) => {
+      return user.userID === socket.id && user.username === socket.username;
+    });
+    if (disconnectedUserIndex >= 0) {
+      onlineUsers.splice(disconnectedUserIndex, 1);
+      socket.broadcast.emit("notify user disconnected", socket.username);
+    }
   });
 
   socket.on("new message", (data) => {
@@ -47,8 +68,23 @@ io.on("connection", (socket) => {
   setInterval(() => {
     socket.volatile.emit("update online users", onlineUsers);
   }, 1000);
+
+  socket.on("confirm user", username => {
+    const userExists = onlineUsers.findIndex(user => {
+      return user.username === username;
+    })
+    socket.emit("user confirmed", userExists);
+  })
+
 });
+
+app.use((err, req, res, next) => {
+  console.error("AN ERROR OCCURED...")
+  console.error(err.message);
+})
 
 server.listen(3000, () => {
   console.log(`Listening at *:3000`);
 });
+
+ module.exports = { onlineUsers }

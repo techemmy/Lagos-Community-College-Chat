@@ -1,14 +1,11 @@
-import {socket} from "./socket.js";
-
-// socket.onAny((event, ...args) => {
-//     console.log(event, args);
-//   });
+import { socket, checkIfUserExists } from "./socket.js";
 
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
 const modalLabelContainer = document.querySelector(
   "#addPrivateUserModal .modal-body "
 );
+const userNameInput = document.getElementById("privateUserNameInput");
 
 while (!username || username.trim() === "") {
   username = prompt("Enter your username");
@@ -24,36 +21,42 @@ const emitMessage = (data, messages) => {
   messages.appendChild(item);
 };
 
-const emitUserConnected = (userName, messages) => {
+const emitUserConnected = (user, messages) => {
   const item = document.createElement("li");
+  const userName = user.username? user.username:user;
   item.innerHTML = `<i>${userName} just connected!</i>`;
   messages.appendChild(item);
 };
 
-const emitUserDisconnected = (userName, messages) => {
+const emitUserDisconnected = (user, messages) => {
   const item = document.createElement("li");
+  const userName = user.username? user.username:user;
   item.innerHTML = `<i>${userName} just disconnected!</i>`;
   messages.appendChild(item);
 };
 
-addPrivateUserBtn.addEventListener("click", () => {
-  let privateUserNameInput = document.getElementById("privateUserNameInput");
-  let privateUserName = privateUserNameInput.value.trim();
-  const feedbackMessage = document.createElement("p");
+addPrivateUserBtn.addEventListener("click", async () => {
+  const user = userNameInput.value.trim();
 
-  if (privateUserName && userExists(privateUserName)) {
-    feedbackMessage.innerHTML = `<i>${privateUserName} added succesfully</i>`;
-    privateUserNameInput = "";
-  } else {
-    feedbackMessage.innerHTML = "<i>Invalid username</i>";
+  try {
+    if (user && await checkIfUserExists(socket, user)) {
+      addNotification(modalLabelContainer, `<i>${user} confirmed. Adding up...</i>`);
+    }
+  } catch (error) {
+    if (error.message) {
+      addNotification(modalLabelContainer, `${error.message}`);
+    } else {
+      addNotification(modalLabelContainer, "<i>Unable to add user</i>");
+    }
   }
-
-  modalLabelContainer.appendChild(feedbackMessage);
-  setTimeout(() => (feedbackMessage.innerHTML = ""), 3000);
+  userNameInput.value = "";
 });
 
-function userExists(username) {
-  return true;
+function addNotification(notificationContainer, message) {
+  const feedbackMessage = document.createElement("p");
+  feedbackMessage.innerHTML = message;
+  notificationContainer.appendChild(feedbackMessage);
+  setTimeout(() => (feedbackMessage.innerHTML = ""), 3000);
 }
 
 export { username, emitMessage, emitUserConnected, emitUserDisconnected };
