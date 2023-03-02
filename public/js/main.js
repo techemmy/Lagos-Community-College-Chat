@@ -67,7 +67,7 @@ addPrivateUserBtn.addEventListener("click", async () => {
         modalPopup,
         `<i>${username} confirmed. Adding up...</i>`
       );
-      addPrivateMessages(user, socket.auth.username, privateMessages);
+      addPrivateMessages(socket.auth.username, user, privateMessages);
     }
   } catch (error) {
     if (error.message) {
@@ -79,7 +79,7 @@ addPrivateUserBtn.addEventListener("click", async () => {
   userNameInput.value = "";
 });
 
-const addUserToPrivateMessage = (user, privateMessages) => {
+const addUserToPrivateMessageUI = (user, privateMessages) => {
   const clickableUser = document.createElement('a');
   clickableUser.className = "private-message";
   const greenDot = document.createElement("span");
@@ -106,4 +106,5 @@ export {
   emitUserConnected,
   emitUserDisconnected,
   sortUsersByCurrentUser,
+  addUserToPrivateMessageUI
 };
