@@ -1,4 +1,4 @@
-import { socket, checkIfUserExists, addPrivateMessages } from "./socket.js";
+import { socket, canUserBeAdded, addPrivateMessages } from "./socket.js";
 
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
@@ -60,7 +60,7 @@ addPrivateUserBtn.addEventListener("click", async () => {
   }
 
   try {
-    const user = await checkIfUserExists(socket, username);
+    const user = await canUserBeAdded(socket, username);
     if (user) {
       addNotification(
         modalPopup,

@@ -73,18 +73,24 @@ socket.on("add user", from => {
   addUserToPrivateMessageUI(from);
 })
 
-function checkIfUserExists(socket, username) {
+socket.on("added successfully", from => {
+  console.log(from);
+  socket.emit("add private message", from);
+})
+
+function canUserBeAdded(socket, username) {
   return new Promise((resolve, reject) => {
     if (username === socket.auth.username) {
       return reject(Error("You can't add yourself"));
     }
 
     socket.emit("confirm user", username);
-    socket.on("user confirmed", (user) => {
+    socket.on("user confirmed", (user, error) => {
       if (user) {
         resolve(user);
       } else {
-        reject(Error("User not found"));
+        console.log(error);
+        reject(Error(error || "User not found"));
       }
       reject(false);
     });
@@ -96,4 +102,4 @@ function addPrivateMessages(otherUser) {
   socket.emit("add user", {from: socket.auth.username, to: otherUser});
 }
 
-export { socket, checkIfUserExists, addPrivateMessages };
+export { socket, canUserBeAdded, addPrivateMessages };

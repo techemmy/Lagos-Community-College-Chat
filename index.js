@@ -24,6 +24,7 @@ io.use((socket, next) => {
 const onlineUsers = [];
 
 io.on("connection", (socket) => {
+  const privateMessages = [];
   for (let [id, socket] of io.of("/").sockets) {
     const userExists = onlineUsers.find((user) => {
       return user.userID === id || user.username === socket.username;
@@ -70,14 +71,29 @@ io.on("connection", (socket) => {
   }, 1000);
 
   socket.on("confirm user", (username) => {
-    const user = onlineUsers.find((user) => {
-      return user.username === username;
-    });
-    socket.emit("user confirmed", user);
+    console.log(privateMessages);
+    let user;
+    let error;
+
+    if (privateMessages.includes(username)) {
+      user = null;
+      error = "User has been added!";
+    } else {
+      user = onlineUsers.find((user) => {
+        return user.username === username;
+      });
+    }
+    socket.emit("user confirmed", user, error);
   });
 
   socket.on("add user", ({from, to}) => {
+    privateMessages.push(to.username);
     socket.to(to.userID).emit("add user", from);
+    socket.to(to.userID).emit("added successfully", from); // add current user to other user private messages list
+  })
+
+  socket.on("add private message", from => {
+    privateMessages.push(from);
   })
 });
 
