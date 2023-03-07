@@ -68,9 +68,9 @@ socket.on("update online users", (onlineUsers) => {
   }
 });
 
-socket.on("add user", from => {
-  console.log("entered", from);
-  addUserToPrivateMessageUI(from);
+socket.on("add user", username => {
+  console.log("entered", username);
+  addUserToPrivateMessageUI(username);
 })
 
 socket.on("added successfully", from => {
