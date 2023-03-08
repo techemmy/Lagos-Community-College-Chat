@@ -92,6 +92,11 @@ const addUserToPrivateMessageUI = (user) => {
   clickableUser.append(username);
 
   privateMessages.appendChild(clickableUser);
+
+  clickableUser.addEventListener("click", function(){
+    const username = this.querySelector("b").textContent;
+    setActiveChannel(username);
+  })
 }
 
 const addNotification = (notificationContainer, message) => {
@@ -101,11 +106,17 @@ const addNotification = (notificationContainer, message) => {
   setTimeout(() => (feedbackMessage.innerHTML = ""), 3000);
 };
 
+const getActiveChannel = () => localStorage.getItem("activeChannel");
+
+const setActiveChannel = (user) => localStorage.setItem("activeChannel", user)
+
 export {
   username,
   emitMessage,
   emitUserConnected,
   emitUserDisconnected,
+  getActiveChannel,
+  setActiveChannel,
   sortUsersByCurrentUser,
   addUserToPrivateMessageUI
 };
