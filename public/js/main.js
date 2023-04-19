@@ -2,6 +2,7 @@ import { socket, canUserBeAdded, addPrivateMessages } from "./socket.js";
 
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
+const addPrivateUserForm = document.getElementById("addPrivateUserForm");
 const modalPopup = document.querySelector(
   "#addPrivateUserModal .modal-body"
 );
@@ -48,7 +49,7 @@ const emitUserDisconnected = (user, messages) => {
   messages.appendChild(item);
 };
 
-addPrivateUserBtn.addEventListener("click", async () => {
+const addPrivateUser = async () => {
   const username = userNameInput.value.trim();
   if (!username) {
     addNotification(
@@ -76,7 +77,14 @@ addPrivateUserBtn.addEventListener("click", async () => {
     }
   }
   userNameInput.value = "";
+}
+
+addPrivateUserForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  addPrivateUser();
 });
+addPrivateUserBtn.addEventListener("click", addPrivateUser);
+
 
 const addUserToPrivateMessageUI = (user) => {
   const privateMessages = document.getElementById("privateMessages")
