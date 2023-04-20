@@ -4,7 +4,8 @@ import {
   emitUserConnected,
   emitUserDisconnected,
   sortUsersByCurrentUser,
-  addUserToPrivateMessageUI
+  addUserToPrivateMessageUI,
+  getUserName
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -13,12 +14,15 @@ const statusBar = document.getElementById("status-bar");
 
 const socket = io({ autoConnect: false });
 
-socket.on("connect", () => {
-  emitUserConnected(username, messagesContainer);
-  socket.emit("user connected", username);
-});
+socket.on("user exists", ({username, user}) => {
+  socket.disconnect();
+  const newUsername = getUserName(username, user);
+  socket.auth = { username: newUsername }
+  socket.connect();
+})
 
 socket.on("notify user connected", (user) => {
+  if (user.isSelf) localStorage.setItem("username", user.username);
   emitUserConnected(user, messagesContainer);
   window.scrollTo(0, document.body.scrollHeight);
 });

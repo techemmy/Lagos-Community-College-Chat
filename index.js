@@ -25,12 +25,23 @@ const onlineUsers = [];
 
 io.on("connection", (socket) => {
   const privateMessages = [];
+
+  // prevent new user from using an existing username
+  const user = onlineUsers.find(user => {
+    return user.username === socket.username;
+  })
+  if (user) {
+    socket.emit("user exists", {username: socket.username, user});
+    return;
+  }
+
+  // add new users to the list of online users
   for (let [id, socket] of io.of("/").sockets) {
-    const userExists = onlineUsers.find((user) => {
+    const isUserFound = onlineUsers.find((user) => {
       return user.userID === id || user.username === socket.username;
     });
 
-    if (!userExists) {
+    if (!isUserFound) {
       onlineUsers.push({
         userID: id,
         username: socket.username,
@@ -38,11 +49,14 @@ io.on("connection", (socket) => {
     }
   }
 
-  socket.on("user connected", () => {
-    socket.broadcast.emit("notify user connected", {
-      userID: socket.id,
-      username: socket.username,
-    });
+  socket.emit("notify user connected", {
+    username: socket.username,
+    isSelf: true
+  })
+
+  socket.broadcast.emit("notify user connected", {
+    userID: socket.id,
+    username: socket.username,
   });
 
   socket.once("disconnect", () => {

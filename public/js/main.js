@@ -8,13 +8,23 @@ const modalPopup = document.querySelector(
 );
 const userNameInput = document.getElementById("privateUserNameInput");
 
-while (!username || username.trim() === "") {
-  username = prompt("Enter your username");
-  localStorage.setItem("username", username);
-}
+username = getUserName(username);
 
 socket.auth = { username };
 socket.connect();
+
+function getUserName(username, user) {
+  while (user && username === user.username) {
+    alert("Username is taken!");
+    username = prompt("Enter another username").trim();
+  }
+
+  while (!username || username.trim() === "") {
+    username = prompt("Enter your username").trim();
+  }
+
+  return username;
+}
 
 const sortUsersByCurrentUser = (users, userID) => {
   users.forEach((user) => {
@@ -126,5 +136,6 @@ export {
   getActiveChannel,
   setActiveChannel,
   sortUsersByCurrentUser,
-  addUserToPrivateMessageUI
+  addUserToPrivateMessageUI,
+  getUserName
 };
