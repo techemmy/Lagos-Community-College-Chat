@@ -5,7 +5,7 @@ import {
   emitUserDisconnected,
   sortUsersByCurrentUser,
   addUserToPrivateMessageUI,
-  getUserName
+  getUserName,
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -14,12 +14,12 @@ const statusBar = document.getElementById("status-bar");
 
 const socket = io({ autoConnect: false });
 
-socket.on("user exists", ({username, user}) => {
+socket.on("user exists", ({ username, user }) => {
   socket.disconnect();
   const newUsername = getUserName(username, user);
-  socket.auth = { username: newUsername }
+  socket.auth = { username: newUsername };
   socket.connect();
-})
+});
 
 socket.on("notify user connected", (user) => {
   if (user.isSelf) localStorage.setItem("username", user.username);
@@ -72,15 +72,15 @@ socket.on("update online users", (onlineUsers) => {
   }
 });
 
-socket.on("add user", username => {
+socket.on("add user", (username) => {
   console.log("entered", username);
   addUserToPrivateMessageUI(username);
-})
+});
 
-socket.on("added successfully", from => {
+socket.on("added successfully", (from) => {
   console.log(from);
   socket.emit("add private message", from);
-})
+});
 
 function canUserBeAdded(socket, username) {
   return new Promise((resolve, reject) => {
@@ -103,7 +103,7 @@ function canUserBeAdded(socket, username) {
 
 function addPrivateMessages(otherUser) {
   addUserToPrivateMessageUI(otherUser.username);
-  socket.emit("add user", {from: socket.auth.username, to: otherUser});
+  socket.emit("add user", { from: socket.auth.username, to: otherUser });
 }
 
 export { socket, canUserBeAdded, addPrivateMessages };

@@ -27,11 +27,11 @@ io.on("connection", (socket) => {
   const privateMessages = [];
 
   // prevent new user from using an existing username
-  const user = onlineUsers.find(user => {
+  const user = onlineUsers.find((user) => {
     return user.username === socket.username;
-  })
+  });
   if (user) {
-    socket.emit("user exists", {username: socket.username, user});
+    socket.emit("user exists", { username: socket.username, user });
     return;
   }
 
@@ -51,8 +51,8 @@ io.on("connection", (socket) => {
 
   socket.emit("notify user connected", {
     username: socket.username,
-    isSelf: true
-  })
+    isSelf: true,
+  });
 
   socket.broadcast.emit("notify user connected", {
     userID: socket.id,
@@ -100,15 +100,15 @@ io.on("connection", (socket) => {
     socket.emit("user confirmed", user, error);
   });
 
-  socket.on("add user", ({from, to}) => {
+  socket.on("add user", ({ from, to }) => {
     privateMessages.push(to.username);
     socket.to(to.userID).emit("add user", from);
     socket.to(to.userID).emit("added successfully", from); // add current user to other user private messages list
-  })
+  });
 
-  socket.on("add private message", from => {
+  socket.on("add private message", (from) => {
     privateMessages.push(from);
-  })
+  });
 });
 
 app.use((err, req, res, next) => {

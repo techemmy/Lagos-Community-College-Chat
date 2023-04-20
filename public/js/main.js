@@ -3,9 +3,7 @@ import { socket, canUserBeAdded, addPrivateMessages } from "./socket.js";
 let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
 const addPrivateUserForm = document.getElementById("addPrivateUserForm");
-const modalPopup = document.querySelector(
-  "#addPrivateUserModal .modal-body"
-);
+const modalPopup = document.querySelector("#addPrivateUserModal .modal-body");
 const userNameInput = document.getElementById("privateUserNameInput");
 
 username = getUserName(username);
@@ -62,21 +60,15 @@ const emitUserDisconnected = (user, messages) => {
 const addPrivateUser = async () => {
   const username = userNameInput.value.trim();
   if (!username) {
-    addNotification(
-      modalPopup,
-      "<i>Invalid username</i>"
-    );
+    addNotification(modalPopup, "<i>Invalid username</i>");
     userNameInput.value = "";
-    return
+    return;
   }
 
   try {
     const user = await canUserBeAdded(socket, username);
     if (user) {
-      addNotification(
-        modalPopup,
-        `<i>${username} confirmed. Adding up...</i>`
-      );
+      addNotification(modalPopup, `<i>${username} confirmed. Adding up...</i>`);
       addPrivateMessages(user);
     }
   } catch (error) {
@@ -87,7 +79,7 @@ const addPrivateUser = async () => {
     }
   }
   userNameInput.value = "";
-}
+};
 
 addPrivateUserForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -95,11 +87,10 @@ addPrivateUserForm.addEventListener("submit", (e) => {
 });
 addPrivateUserBtn.addEventListener("click", addPrivateUser);
 
-
 const addUserToPrivateMessageUI = (user) => {
-  const privateMessages = document.getElementById("privateMessages")
+  const privateMessages = document.getElementById("privateMessages");
 
-  const clickableUser = document.createElement('a');
+  const clickableUser = document.createElement("a");
   clickableUser.className = "private-message";
   const greenDot = document.createElement("span");
   greenDot.className = "fa fa-circle mr-3";
@@ -111,11 +102,11 @@ const addUserToPrivateMessageUI = (user) => {
 
   privateMessages.appendChild(clickableUser);
 
-  clickableUser.addEventListener("click", function(){
+  clickableUser.addEventListener("click", function () {
     const username = this.querySelector("b").textContent;
     setActiveChannel(username);
-  })
-}
+  });
+};
 
 const addNotification = (notificationContainer, message) => {
   const feedbackMessage = document.createElement("p");
@@ -126,7 +117,7 @@ const addNotification = (notificationContainer, message) => {
 
 const getActiveChannel = () => localStorage.getItem("activeChannel");
 
-const setActiveChannel = (user) => localStorage.setItem("activeChannel", user)
+const setActiveChannel = (user) => localStorage.setItem("activeChannel", user);
 
 export {
   username,
@@ -137,5 +128,5 @@ export {
   setActiveChannel,
   sortUsersByCurrentUser,
   addUserToPrivateMessageUI,
-  getUserName
+  getUserName,
 };
