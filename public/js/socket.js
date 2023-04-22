@@ -1,11 +1,11 @@
 import {
-  username,
   emitMessage,
   emitUserConnected,
   emitUserDisconnected,
   sortUsersByCurrentUser,
   addUserToPrivateMessageUI,
   getUserName,
+  retrieveUsername,
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -35,7 +35,7 @@ socket.on("notify user disconnected", (user) => {
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (input.value) {
-    const data = { user: username, message: input.value };
+    const data = { user: retrieveUsername(), message: input.value };
     input.value = "";
 
     emitMessage(data, messagesContainer);
@@ -51,7 +51,7 @@ socket.on("broadcast message", (data) => {
 });
 
 input.addEventListener("keypress", () => {
-  socket.emit("keyboard pressed", username);
+  socket.emit("keyboard pressed", retrieveUsername());
 });
 
 socket.on("user typing", (userTyping) => {

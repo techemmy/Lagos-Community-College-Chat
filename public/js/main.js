@@ -24,6 +24,8 @@ function getUserName(username, user) {
   return username.trim();
 }
 
+const retrieveUsername = () => localStorage.getItem("username");
+
 const sortUsersByCurrentUser = (users, userID) => {
   users.forEach((user) => {
     user.self = user.userID === userID;
@@ -120,7 +122,6 @@ const getActiveChannel = () => localStorage.getItem("activeChannel");
 const setActiveChannel = (user) => localStorage.setItem("activeChannel", user);
 
 export {
-  username,
   emitMessage,
   emitUserConnected,
   emitUserDisconnected,
@@ -129,4 +130,5 @@ export {
   sortUsersByCurrentUser,
   addUserToPrivateMessageUI,
   getUserName,
+  retrieveUsername
 };
