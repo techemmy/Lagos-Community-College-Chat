@@ -14,14 +14,14 @@ socket.connect();
 function getUserName(username, user) {
   while (user && username === user.username) {
     alert("Username is taken!");
-    username = prompt("Enter another username").trim();
+    username = prompt("Enter another username");
   }
 
   while (!username || username.trim() === "") {
-    username = prompt("Enter your username").trim();
+    username = prompt("Enter your username");
   }
 
-  return username;
+  return username.trim();
 }
 
 const sortUsersByCurrentUser = (users, userID) => {
