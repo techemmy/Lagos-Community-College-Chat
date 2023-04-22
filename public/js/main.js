@@ -130,5 +130,5 @@ export {
   sortUsersByCurrentUser,
   addUserToPrivateMessageUI,
   getUserName,
-  retrieveUsername
+  retrieveUsername,
 };
