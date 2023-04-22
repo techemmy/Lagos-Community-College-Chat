@@ -1,12 +1,11 @@
 import { socket, canUserBeAdded, addPrivateMessages } from "./socket.js";
 
-let username = localStorage.getItem("username");
 const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
 const addPrivateUserForm = document.getElementById("addPrivateUserForm");
 const modalPopup = document.querySelector("#addPrivateUserModal .modal-body");
 const userNameInput = document.getElementById("privateUserNameInput");
 
-username = getUserName(username);
+const username = retrieveUsername() || getUserName();
 
 socket.auth = { username };
 socket.connect();
@@ -24,7 +23,9 @@ function getUserName(username, user) {
   return username.trim();
 }
 
-const retrieveUsername = () => localStorage.getItem("username");
+function retrieveUsername() {
+  return localStorage.getItem("username");
+}
 
 const sortUsersByCurrentUser = (users, userID) => {
   users.forEach((user) => {
