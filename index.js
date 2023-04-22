@@ -76,8 +76,8 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("keyboard pressed", (username) => {
-    socket.broadcast.emit("user typing", username);
+  socket.on("keyboard pressed", () => {
+    socket.broadcast.emit("user typing", socket.username);
   });
 
   setInterval(() => {

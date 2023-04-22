@@ -51,7 +51,7 @@ socket.on("broadcast message", (data) => {
 });
 
 input.addEventListener("keypress", () => {
-  socket.emit("keyboard pressed", retrieveUsername());
+  socket.emit("keyboard pressed");
 });
 
 socket.on("user typing", (userTyping) => {
