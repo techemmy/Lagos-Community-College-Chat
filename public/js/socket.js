@@ -73,12 +73,10 @@ socket.on("update online users", (onlineUsers) => {
 });
 
 socket.on("add user", (username) => {
-  console.log("entered", username);
   addUserToPrivateMessageUI(username);
 });
 
 socket.on("added successfully", (from) => {
-  console.log(from);
   socket.emit("add private message", from);
 });
 
