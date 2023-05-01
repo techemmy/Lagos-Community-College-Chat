@@ -6,6 +6,7 @@ import {
   addUserToPrivateMessageUI,
   getUserName,
   retrieveUsername,
+  getActiveChannel,
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -40,8 +41,9 @@ form.addEventListener("submit", (e) => {
 
     emitMessage(data, messagesContainer);
     window.scrollTo(0, document.body.scrollHeight);
+    const room = getActiveChannel();
 
-    socket.emit("new message", data);
+    socket.emit("new message", data, room);
   }
 });
 
@@ -73,8 +75,8 @@ socket.on("update online users", (onlineUsers) => {
   }
 });
 
-socket.on("add user", (username) => {
-  addUserToPrivateMessageUI(username);
+socket.on("add user", (username, room) => {
+  addUserToPrivateMessageUI(username, room);
 });
 
 socket.on("added successfully", (from) => {
@@ -101,8 +103,10 @@ function canUserBeAdded(socket, username) {
 }
 
 function addPrivateMessages(otherUser) {
-  addUserToPrivateMessageUI(otherUser.username);
-  socket.emit("add user", { from: socket.auth.username, to: otherUser });
+  const currentUser = socket.auth.username;
+  const room = currentUser + otherUser.username;
+  addUserToPrivateMessageUI(otherUser.username, room);
+  socket.emit("add user", { from: currentUser, to: otherUser, room });
 }
 
 export { socket, canUserBeAdded, addPrivateMessages };

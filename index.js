@@ -69,11 +69,8 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("new message", (data) => {
-    socket.broadcast.emit("broadcast message", {
-      user: data.user,
-      message: data.message,
-    });
+  socket.on("new message", (data, room) => {
+    socket.to(room).emit("broadcast message", data);
   });
 
   socket.on("keyboard pressed", () => {
@@ -99,15 +96,19 @@ io.on("connection", (socket) => {
     socket.emit("user confirmed", user, error);
   });
 
-  socket.on("add user", ({ from, to }) => {
+  socket.on("add user", ({ from, to, room}) => {
     privateMessages.push(to.username);
-    socket.to(to.userID).emit("add user", from);
+    socket.to(to.userID).emit("add user", from, room);
     socket.to(to.userID).emit("added successfully", from); // add current user to other user private messages list
   });
 
   socket.on("add private message", (from) => {
     privateMessages.push(from);
   });
+
+  socket.on("join channel room", room => {
+    socket.join(room);
+  })
 });
 
 app.use((err, req, res, next) => {

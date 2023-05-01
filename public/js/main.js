@@ -10,6 +10,7 @@ const username = retrieveUsername() || getUserName();
 
 socket.auth = { username };
 socket.connect();
+setActiveChannel("general");
 
 generalChannel.addEventListener("click", () => {
   setActiveChannel("general");
@@ -95,7 +96,7 @@ addPrivateUserForm.addEventListener("submit", (e) => {
 });
 addPrivateUserBtn.addEventListener("click", addPrivateUser);
 
-const addUserToPrivateMessageUI = (user) => {
+const addUserToPrivateMessageUI = (user, room) => {
   const privateMessages = document.getElementById("privateMessages");
 
   const clickableUser = document.createElement("a");
@@ -104,6 +105,7 @@ const addUserToPrivateMessageUI = (user) => {
   greenDot.className = "fa fa-circle mr-3";
   const username = document.createElement("b");
   username.innerText = user;
+  username.dataset.roomID = room;
 
   clickableUser.append(greenDot);
   clickableUser.append(username);
@@ -111,8 +113,8 @@ const addUserToPrivateMessageUI = (user) => {
   privateMessages.appendChild(clickableUser);
 
   clickableUser.addEventListener("click", function () {
-    const username = this.querySelector("b").textContent;
-    setActiveChannel(username);
+    const room = this.querySelector("b").dataset.roomID;
+    setActiveChannel(room, user);
   });
 };
 
@@ -125,7 +127,12 @@ const addNotification = (notificationContainer, message) => {
 
 const getActiveChannel = () => localStorage.getItem("activeChannel");
 
-const setActiveChannel = (user) => localStorage.setItem("activeChannel", user);
+function setActiveChannel(room, otherUserName) {
+  localStorage.setItem("activeChannel", room);
+  socket.emit("join channel room", room)
+
+  document.querySelector("#activeChannel b").innerText = `Active: ${otherUserName?? room}`
+}
 
 export {
   emitMessage,
