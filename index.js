@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
   const user = onlineUsers.find((user) => {
     return user.username === socket.username;
   });
-  if (user) {
+  if (user && socket.id !== user.userID) {
     socket.emit("user exists", { username: socket.username, user });
     return;
   }
