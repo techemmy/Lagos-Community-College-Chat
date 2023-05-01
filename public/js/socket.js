@@ -65,10 +65,11 @@ socket.on("update online users", (onlineUsers) => {
   onlineUsers = sortUsersByCurrentUser(onlineUsers, socket.id);
   const statusBarText = statusBar.innerText;
   if (statusBarText === "" || statusBarText.startsWith("Online")) {
-    const usersName = onlineUsers.map((userObj) => {
+    let usersNames = onlineUsers.map((userObj) => {
       return userObj.username;
     });
-    statusBar.innerText = "Online: ".concat(usersName);
+    usersNames = [`${usersNames[0]} (Yourself)`, ...usersNames.splice(1)]
+    statusBar.innerText = "Online: ".concat(usersNames);
   }
 });
 
