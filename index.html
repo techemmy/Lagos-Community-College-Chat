@@ -22,11 +22,15 @@
       </div>
       <h1><span class="logo">Lagos CC Chat</span></h1>
       <ul class="list-unstyled components mb-5">
+        <li>
+          <div id="activeChannel"><span class="fa fa-circle mr-3"></span> <b>Active</b> </div>
+        </li>
+        <li><div>Clicking on a private user would allow only that user to see your messages</div></li>
         <li class="active">
           <a id="general"><span class="fa fa-home mr-3"></span> <b>General Channel</b></a>
         </li>
         <li class="mt-3" data-bs-toggle="modal" data-bs-target="#addPrivateUserModal">
-          <a><span class="fa fa-plus mr-3"></span> <b>Add User</b> </a>
+          <a><span class="fa fa-plus mr-3"></span> <b>Add Private User</b> </a>
         </li>
         <li id="privateMessages" class="active">
           <!-- <a class="private-message">

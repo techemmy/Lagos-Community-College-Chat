@@ -139,9 +139,18 @@ a[data-toggle="collapse"] {
 }
 
 .private-message span {
-  color: rgb(0, 255, 21);
+  color: #2f89fc;
 }
 
 .private-message b {
   margin-left: 0.3rem;
+}
+
+#activeChannel span {
+  color:rgb(0, 255, 21);
+}
+
+.list-unstyled.components div {
+  padding: 15px 30px;
+  border-bottom: 1px solid #8c8989;
 }
