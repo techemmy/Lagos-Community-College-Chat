@@ -4,11 +4,16 @@ const addPrivateUserBtn = document.getElementById("addPrivateUserBtn");
 const addPrivateUserForm = document.getElementById("addPrivateUserForm");
 const modalPopup = document.querySelector("#addPrivateUserModal .modal-body");
 const userNameInput = document.getElementById("privateUserNameInput");
+const generalChannel = document.getElementById("general");
 
 const username = retrieveUsername() || getUserName();
 
 socket.auth = { username };
 socket.connect();
+
+generalChannel.addEventListener("click", () => {
+  setActiveChannel("general");
+})
 
 function getUserName(username, user) {
   while (user && username === user.username) {
