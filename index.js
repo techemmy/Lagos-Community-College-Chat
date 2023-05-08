@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
     socket.emit("user confirmed", user, error);
   });
 
-  socket.on("add user", ({ from, to, room}) => {
+  socket.on("add user", ({ from, to, room }) => {
     privateMessages.push(to.username);
     socket.to(to.userID).emit("add user", from.username, room);
     socket.to(to.userID).emit("added successfully", from.username); // add current user to other user private messages list
