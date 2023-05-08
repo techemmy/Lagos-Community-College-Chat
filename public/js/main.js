@@ -5,6 +5,8 @@ const addPrivateUserForm = document.getElementById("addPrivateUserForm");
 const modalPopup = document.querySelector("#addPrivateUserModal .modal-body");
 const userNameInput = document.getElementById("privateUserNameInput");
 const generalChannel = document.getElementById("general");
+const privateMessages = document.getElementById("privateMessages");
+
 
 const username = retrieveUsername() || getUserName();
 
@@ -97,8 +99,6 @@ addPrivateUserForm.addEventListener("submit", (e) => {
 addPrivateUserBtn.addEventListener("click", addPrivateUser);
 
 const addUserToPrivateMessageUI = (user, room) => {
-  const privateMessages = document.getElementById("privateMessages");
-
   const clickableUser = document.createElement("a");
   clickableUser.className = "private-message";
   const greenDot = document.createElement("span");
@@ -127,11 +127,19 @@ const addNotification = (notificationContainer, message) => {
 
 const getActiveChannel = () => localStorage.getItem("activeChannel");
 
+const removeUserFromPrivateMessages = username => {
+  privateMessages.querySelectorAll('a').forEach(privateMessage => {
+    if (privateMessage.querySelector('b').textContent === username) {
+      privateMessage.remove();
+    }
+  })
+}
+
 function setActiveChannel(room, otherUserName) {
   localStorage.setItem("activeChannel", room);
   socket.emit("join channel room", room)
 
-  document.querySelector("#activeChannel b").innerText = `Active: ${otherUserName?? room}`
+  document.querySelector("#activeChannel b").innerText = `Active: ${otherUserName ?? room}`
 }
 
 export {
@@ -144,4 +152,5 @@ export {
   addUserToPrivateMessageUI,
   getUserName,
   retrieveUsername,
+  removeUserFromPrivateMessages
 };

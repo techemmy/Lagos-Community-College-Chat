@@ -7,6 +7,7 @@ import {
   getUserName,
   retrieveUsername,
   getActiveChannel,
+  removeUserFromPrivateMessages
 } from "./main.js";
 const messagesContainer = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -30,6 +31,7 @@ socket.on("notify user connected", (user) => {
 
 socket.on("notify user disconnected", (user) => {
   emitUserDisconnected(user, messagesContainer);
+  removeUserFromPrivateMessages(user);
   window.scrollTo(0, document.body.scrollHeight);
 });
 
