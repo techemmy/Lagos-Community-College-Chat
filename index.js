@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
 
   socket.on("new message", (data, room) => {
     if (room !== "general") {
-      data.user = `<i>DM from:</i> ${data.user}`;
+      data.user = `<i>DM from ${data.user}</i>`;
       socket.to(room).emit("broadcast message", data);
       return;
     }
