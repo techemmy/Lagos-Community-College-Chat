@@ -70,7 +70,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new message", (data, room) => {
-    socket.to(room).emit("broadcast message", data);
+    if (room !== "general") {
+      data.user = `<i>DM from:</i> ${data.user}`;
+      socket.to(room).emit("broadcast message", data);
+      return;
+    }
+    socket.broadcast.emit("broadcast message", data);
   });
 
   socket.on("keyboard pressed", () => {
@@ -98,8 +103,8 @@ io.on("connection", (socket) => {
 
   socket.on("add user", ({ from, to, room}) => {
     privateMessages.push(to.username);
-    socket.to(to.userID).emit("add user", from, room);
-    socket.to(to.userID).emit("added successfully", from); // add current user to other user private messages list
+    socket.to(to.userID).emit("add user", from.username, room);
+    socket.to(to.userID).emit("added successfully", from.username); // add current user to other user private messages list
   });
 
   socket.on("add private message", (from) => {
@@ -107,7 +112,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join channel room", room => {
-    socket.join(room);
+    // socket.join(room);
   })
 });
 

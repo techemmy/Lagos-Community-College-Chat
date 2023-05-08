@@ -76,7 +76,7 @@ socket.on("update online users", (onlineUsers) => {
 });
 
 socket.on("add user", (username, room) => {
-  addUserToPrivateMessageUI(username, room);
+   addUserToPrivateMessageUI(username, room);
 });
 
 socket.on("added successfully", (from) => {
@@ -103,10 +103,9 @@ function canUserBeAdded(socket, username) {
 }
 
 function addPrivateMessages(otherUser) {
-  const currentUser = socket.auth.username;
-  const room = currentUser + otherUser.username;
-  addUserToPrivateMessageUI(otherUser.username, room);
-  socket.emit("add user", { from: currentUser, to: otherUser, room });
+  const currentUser = { username: socket.auth.username, id: socket.id }
+  addUserToPrivateMessageUI(otherUser.username, otherUser.userID);
+  socket.emit("add user", { from: currentUser, to: otherUser, room: currentUser.id });
 }
 
 export { socket, canUserBeAdded, addPrivateMessages };
