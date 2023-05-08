@@ -110,10 +110,6 @@ io.on("connection", (socket) => {
   socket.on("add private message", (from) => {
     privateMessages.push(from);
   });
-
-  socket.on("join channel room", room => {
-    // socket.join(room);
-  })
 });
 
 app.use((err, req, res, next) => {
