@@ -128,11 +128,16 @@ const addNotification = (notificationContainer, message) => {
 const getActiveChannel = () => localStorage.getItem("activeChannel");
 
 const removeUserFromPrivateMessages = username => {
+  let userID;
   privateMessages.querySelectorAll('a').forEach(privateMessage => {
-    if (privateMessage.querySelector('b').textContent === username) {
+    const userInfo = privateMessage.querySelector('b');
+    if (userInfo.textContent === username) {
       privateMessage.remove();
+      userID = userInfo.dataset.roomID;
     }
   })
+
+  return userID
 }
 
 function setActiveChannel(room, otherUserName) {
